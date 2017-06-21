@@ -1,7 +1,7 @@
 {
-  "name": "egg-logrotator",
+  "name": "nodinx-logrotator",
   "version": "2.2.3",
-  "description": "logrotator for egg",
+  "description": "logrotator for nodinx",
   "eggPlugin": {
     "name": "logrotator",
     "dep": [

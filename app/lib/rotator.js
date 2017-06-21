@@ -33,12 +33,13 @@ class Rotator {
       }
     }
 
-    if (rotatedFile.length) {
+    // 因为tafnode中只有worker定时任务, 所有存在多个worker同时操作日志的竞争情况, 此时只有一个worker能够更新日志, 但其他所有的worker都需要重新加载日志    
+    // if (rotatedFile.length) { 
       // tell every one to reload logger
-      this.logger.info('[egg-logrotator] broadcast log-reload');
-      this.app.messenger.sendToApp('log-reload');
-      this.app.messenger.sendToAgent('log-reload');
-    }
+    this.logger.info('[egg-logrotator] broadcast log-reload');
+    this.app.messenger.sendToApp('log-reload');
+    this.app.messenger.sendToAgent('log-reload');
+    // }
 
     this.logger.info('[egg-logrotator] rotate files success by %s, files %j',
       this.constructor.name, rotatedFile);
