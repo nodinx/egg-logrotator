@@ -60,9 +60,12 @@ function* renameOrDelete(srcPath, targetPath) {
   const targetExists = yield fs.exists(targetPath);
   // if target file exists, then throw
   // because the target file always be renamed first.
+  // 因为nodinx是单进程的设计, 所以每个worker都会执行日志切割, 此时如果有一个worker切割完了, 
+  // 就会导致其他的进程报下面的错误
   if (targetExists) {
-    const err = new Error(`targetFile ${targetPath} exists!!!`);
-    throw err;
+    // const err = new Error(`targetFile ${targetPath} exists!!!`);
+    // throw err;
+    return;
   }
   yield fs.rename(srcPath, targetPath);
 }

@@ -74,6 +74,8 @@ describe('test/logrotator.test.js', () => {
 
     });
 
+    // nodinx是单进程, 多worker的结构, 所以如果已经有一个文件了, 直接忽略, 而不是报错
+    // 考虑多个worker同时执行时, 如果有一个worker已经执行完了
     it('should error when rename to existed file', function* () {
       const file1 = path.join(app.config.logger.dir, 'foo1.log');
       const file2 = path.join(app.config.logger.dir,
@@ -87,7 +89,8 @@ describe('test/logrotator.test.js', () => {
       yield app.runSchedule(schedule);
       fs.unlinkSync(file1);
       fs.unlinkSync(file2);
-      assert(msg === `[egg-logrotator] rename ${file1}, found exception: targetFile ${file2} exists!!!`);
+      // assert(msg === `[egg-logrotator] rename ${file1}, found exception: targetFile ${file2} exists!!!`);
+      assert(msg === '');
     });
 
     it('should error when rename error', function* () {

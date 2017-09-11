@@ -58,7 +58,12 @@ function* removeExpiredLogFiles(logdir, maxDays, logger) {
   yield names.map(name => function* () {
     const logfile = path.join(logdir, name);
     try {
-      yield fs.unlink(logfile);
+      // nodinx是单进程, 多worker的架构, 所有的worker都会执行这里的逻辑, 
+      // 任何一个进程删除了文件, 其他进程就获取不到文件了 
+      const exists = yield fs.exists(logfile);
+      if (exists) { 
+        yield fs.unlink(logfile);
+      }
     } catch (err) {
       err.message = `[egg-logrotator] remove logfile ${logfile} error, ${err.message}`;
       logger.error(err);
